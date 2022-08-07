@@ -9,13 +9,8 @@ plugins {
 
 // 해당 프로젝트의 모든 gradle을 제어 (root project도 적용)
 allprojects {
-    apply(plugin = "org.springframework.boot")
-    apply(plugin = "io.spring.dependency-management")
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-
     group = "com.study.sungjun"
     version = "0.0.1-SNAPSHOT"
-    java.sourceCompatibility = JavaVersion.VERSION_11
 
     repositories {
         mavenCentral()
@@ -24,12 +19,23 @@ allprojects {
 
 // settings.gradle.kts에 include된 모듈들을의 gradle을 제어
 subprojects {
+    apply(plugin = "org.springframework.boot")
+    apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+
+    java.sourceCompatibility = JavaVersion.VERSION_11
 
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+    }
+
+    dependencyManagement{
+        imports {
+            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        }
     }
 
     tasks.withType<KotlinCompile> {
